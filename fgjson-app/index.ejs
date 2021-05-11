@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>FG JSON</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico"/>
+        <link rel="stylesheet" id="theme_stylesheet" href="<%= htmlWebpackPlugin.files.css.find((fileName) => fileName.indexOf('default') !== -1) %>?v=<%= version %>" type='text/css'>
+    </head>
+    <body class="<%= name %>" data-ms2-container="<%= name %>">
+        <div id="container"></div>
+        <script src="<%= htmlWebpackPlugin.files.js.find((fileName) => fileName.indexOf('fgjson-app') !== -1) %>?v=<%= version %>"></script>
+    </body>
+</html>

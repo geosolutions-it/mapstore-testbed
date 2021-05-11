@@ -1,0 +1,19 @@
+{
+    "plugins": {
+        "viewer": [{
+            "name": "ViewerLayout"
+        },
+        {
+            "name": "Map",
+            "cfg": {
+                "shouldLoadFont": false
+            },
+            "override": {
+                "ViewerLayout": {
+                    "target": "center",
+                    "priority": 1
+                }
+            }
+        }]
+    }
+}
