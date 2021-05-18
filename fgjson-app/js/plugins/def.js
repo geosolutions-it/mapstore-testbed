@@ -13,13 +13,15 @@ import MapPlugin from '@mapstore/framework/plugins/Map';
 import ViewerLayoutPlugin from '@js/plugins/ViewerLayout';
 import FooterPlugin from '@js/plugins/Footer';
 import HeaderPlugin from '@js/plugins/Header';
+import FGJSONPlugin from '@js/plugins/FGJSON';
 
 // list of all the plugins and requires available for the application
 export const plugins = {
     ViewerLayoutPlugin,
     FooterPlugin,
     HeaderPlugin,
-    MapPlugin
+    MapPlugin,
+    FGJSONPlugin
 };
 
 // the requires are javascript functions, component or object

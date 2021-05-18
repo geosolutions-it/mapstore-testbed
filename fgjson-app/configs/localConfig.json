@@ -1,19 +1,34 @@
 {
+    "proxyUrl": {
+        "url": "proxy/?url=",
+        "useCORS": []
+    },
     "plugins": {
-        "viewer": [{
-            "name": "ViewerLayout"
-        },
-        {
-            "name": "Map",
-            "cfg": {
-                "shouldLoadFont": false
+        "viewer": [
+            {
+                "name": "ViewerLayout"
             },
-            "override": {
-                "ViewerLayout": {
-                    "target": "center",
-                    "priority": 1
+            {
+                "name": "Map",
+                "cfg": {
+                    "shouldLoadFont": false
+                },
+                "override": {
+                    "ViewerLayout": {
+                        "target": "center",
+                        "priority": 1
+                    }
+                }
+            },
+            {
+                "name": "FGJSON",
+                "override": {
+                    "ViewerLayout": {
+                        "target": "rightColumn",
+                        "priority": 1
+                    }
                 }
             }
-        }]
+        ]
     }
 }

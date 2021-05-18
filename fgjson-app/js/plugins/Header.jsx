@@ -19,7 +19,6 @@ function Header() {
         justifyContent: 'center',
         borderBottom: '1px solid #ddd'
     }}>
-        <strong>HEADER</strong>
     </div>);
 }
 

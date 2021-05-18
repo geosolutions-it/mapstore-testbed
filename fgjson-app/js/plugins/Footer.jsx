@@ -19,7 +19,6 @@ function Footer() {
         justifyContent: 'center',
         borderTop: '1px solid #ddd'
     }}>
-        <strong>FOOTER</strong>
     </div>);
 }
 

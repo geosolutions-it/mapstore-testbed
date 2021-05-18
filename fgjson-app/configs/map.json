@@ -4,11 +4,11 @@
     "projection": "EPSG:900913",
     "units": "m",
     "center": {
-      "x": -73.935242,
-      "y": 40.730610,
+      "x": -101.03027343750023,
+      "y": 34.401178416573664,
       "crs": "EPSG:4326"
     },
-    "zoom": 11,
+    "zoom": 4,
     "maxExtent": [
       -20037508.34,
       -20037508.34,
@@ -107,16 +107,6 @@
         "credits": {
           "title": "<a class=\"a-light\" xmlns:dct=\"http://purl.org/dc/terms/\" href=\"https://s2maps.eu\" property=\"dct:title\">Sentinel-2 cloudless 2016</a> by <a class=\"a-light\" xmlns:cc=\"http://creativecommons.org/ns#\" href=\"https://eox.at\" property=\"cc:attributionName\" rel=\"cc:attributionURL\">EOX IT Services GmbH</a>"
         }
-      },
-      {
-        "format": "image/png8",
-        "name": "nyc:point_cluster_ytd",
-        "opacity": 1,
-        "title": "Precincts",
-        "type": "wms",
-        "url": "/geoserver/wms",
-        "visibility": true,
-        "singleTile": false
       }
     ]
   }
