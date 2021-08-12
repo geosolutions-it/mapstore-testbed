@@ -6,19 +6,59 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import isEqual from 'lodash/isEqual';
 import { createPlugin } from '@mapstore/framework/utils/PluginsUtils';
+import { resizeMap } from '@mapstore/framework/actions/map';
+import { mapTypeSelector } from '@mapstore/framework/selectors/maptype';
 import usePluginItems from '@js/hooks/usePluginItems';
+import { withResizeDetector } from 'react-resize-detector';
+
+function Center({
+    configuredItems,
+    width,
+    height,
+    onResize
+}) {
+    useEffect(() => {
+        onResize();
+    }, [width, height]);
+    return (
+        <div
+            className="shadow"
+            style={{
+                position: 'absolute',
+                width: 'calc(100% - 16px)',
+                height: 'calc(100% - 16px)',
+                margin: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            {configuredItems
+                .filter(({ target }) => target === 'center')
+                .map(({ Component, name }) => <Component key={name} />)}
+        </div>
+    );
+}
+
+const ConnectedCenter = connect(
+    createSelector([], () => ({})),
+    {
+        onResize: resizeMap
+    }
+)(withResizeDetector(Center));
 
 function ViewerLayout({
-    items
+    items,
+    mapType
 }, context) {
     const { loadedPlugins } = context;
-    const configuredItems = usePluginItems({ items, loadedPlugins });
+    const configuredItems = usePluginItems({ items, loadedPlugins }, [mapType]);
     return (
         <div
             style={{
@@ -48,6 +88,9 @@ function ViewerLayout({
                 {configuredItems
                     .filter(({ target }) => target === 'leftColumn')
                     .map(({ Component, name }) => <Component key={name} />)}
+                {configuredItems
+                    .filter(({ target }) => target === 'leftColumnInner')
+                    .map(({ Component, name }) => <Component key={name} />)}
                 <div
                     style={{
                         flex: 1,
@@ -63,22 +106,7 @@ function ViewerLayout({
                             width: '100%'
                         }}
                     >
-                        <div
-                            className="shadow"
-                            style={{
-                                position: 'absolute',
-                                width: 'calc(100% - 16px)',
-                                height: 'calc(100% - 16px)',
-                                margin: 8,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                        >
-                            {configuredItems
-                                .filter(({ target }) => target === 'center')
-                                .map(({ Component, name }) => <Component key={name} />)}
-                        </div>
+                        <ConnectedCenter configuredItems={configuredItems}/>
                     </div>
                     {configuredItems
                         .filter(({ target }) => !target)
@@ -87,6 +115,19 @@ function ViewerLayout({
                 {configuredItems
                     .filter(({ target }) => target === 'rightColumn')
                     .map(({ Component, name }) => <Component key={name} />)}
+
+                <div
+                    style={{
+                        position: 'absolute',
+                        zIndex: 1000,
+                        right: 0,
+                        top: 0,
+                        height: '100%'
+                    }}>
+                    {configuredItems
+                        .filter(({ target }) => target === 'rightOverlay')
+                        .map(({ Component, name }) => <Component key={name} />)}
+                </div>
             </div>
             <footer>
                 {configuredItems
@@ -108,7 +149,7 @@ function arePropsEqual(prevProps, nextProps) {
 const MemoizeDashboardLayout = memo(ViewerLayout, arePropsEqual);
 
 const DashboardLayoutPlugin = connect(
-    createSelector([], () => ({})),
+    createSelector([mapTypeSelector], (mapType) => ({mapType})),
     {}
 )(MemoizeDashboardLayout);
 

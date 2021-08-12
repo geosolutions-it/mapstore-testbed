@@ -8,21 +8,33 @@
 
 import React from 'react';
 import { createPlugin } from '@mapstore/framework/utils/PluginsUtils';
-
-function Footer() {
-    return (<div style={{
-        height: 28,
-        width: '100%',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderTop: '1px solid #ddd'
-    }}>
-    </div>);
+import Message from '@mapstore/framework/components/I18N/Message';
+function Footer({
+    msLogo
+}) {
+    return (
+        <div className="ms-viewer-footer">
+            <div className="ms-viewer-footer-left">
+            </div>
+            <div className="ms-viewer-footer-right">
+                <a href={msLogo.href}>
+                    <div className="ms-logo">
+                        <div>{msLogo.label || <Message msgId={msLogo.msgId} />}</div>
+                        <div><img src={msLogo.src}/></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    );
 }
 
-Footer.defaultProps = {};
+Footer.defaultProps = {
+    msLogo: {
+        label: 'Built with',
+        href: 'https://mapstore.geosolutionsgroup.com/mapstore',
+        src: 'assets/img/mapstore-logo.png'
+    }
+};
 
 export default createPlugin('Footer', {
     component: Footer,

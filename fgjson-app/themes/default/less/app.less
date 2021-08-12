@@ -11,3 +11,103 @@
     height: auto !important;
     .shadow-soft(); // mixin from mapstore theme
 }
+
+
+.ms-viewer-header {
+    
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid @ms2-color-shade-lighter;
+    padding: 4px 8px;
+    .ms-viewer-header-left {
+        flex: 1;
+        display: flex;
+        height: 100%;
+        img {
+            height: 50px;
+            width: auto;
+        }
+        a {
+            display: block;
+        }
+        a + a {
+            margin-left: 8px;
+            padding-left: 8px;
+            border-left: 1px solid @ms2-color-shade-lighter;
+        }
+    }
+    .ms-viewer-header-right {
+        display: flex;
+        align-items: center;
+    }
+}
+
+footer {
+    z-index: 1000;
+    background-color: @ms2-color-background;
+    position: relative;
+}
+
+.ms-viewer-footer {
+    height: 28px;
+    width: 100%;
+    position: relative;
+    border-top: 1px solid @ms2-color-shade-lighter;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    .ms-viewer-footer-left {
+        flex: 1;
+        display: flex;
+    }
+    .ms-viewer-footer-right {
+        display: flex;
+        align-items: center;
+        .ms-logo {
+            display: flex;
+            font-weight: bold;
+            align-items: center;
+            font-size: 16px;
+            > * + * {
+                margin-left: 4px;
+            }
+            img {
+                height: 16px;
+                width: auto;
+            }
+        }
+    }
+}
+
+#navigationBar-container {
+    right: 0 !important;
+    bottom: 0 !important;
+}
+
+.ms-projection-selector {
+    position: absolute;
+    z-index: 10;
+    min-width: 120px;
+    top: 0;
+    left: 0;
+    margin: 4px;
+    .shadow-soft();
+}
+
+.ms2-border-layout-content {
+    position: relative;
+}
+
+.fg-json-panel-container {
+    width: 500px;
+}
+
+@media only screen and (max-width: 550px) {
+    .fg-json-panel-container {
+        width: 100vw;
+    }
+}

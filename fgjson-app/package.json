@@ -37,10 +37,13 @@
     "test:watch": "mapstore-project test:watch standard"
   },
   "devDependencies": {
-    "@mapstore/project": "1.0.9"
+    "@mapstore/project": "1.0.17"
   },
   "dependencies": {
-    "mapstore": "git+https://github.com/geosolutions-it/MapStore2.git#master"
+    "mapstore": "git+https://github.com/geosolutions-it/MapStore2.git#2021.02.xx",
+    "moment-range": "4.0.2",
+    "react-highlight-words": "0.17.0",
+    "react-json-tree": "0.11.2"
   },
   "mapstore": {
     "apps": [

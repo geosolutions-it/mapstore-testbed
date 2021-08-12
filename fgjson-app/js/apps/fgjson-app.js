@@ -15,6 +15,9 @@ import axios from '@mapstore/framework/libs/ajax';
 import Viewer from '@js/pages/Viewer';
 import pluginsDef from '@js/plugins/def';
 import { configureMap } from '@mapstore/framework/actions/config';
+import { setControlProperty } from '@mapstore/framework/actions/controls';
+import '@js/map/cesium/plugins/FGJSONLayer';
+import '@js/map/openlayers/plugins/FGJSONLayer';
 
 setLocalConfigurationFile('configs/localConfig.json');
 setConfigProp('translationsPath', ['translations', 'ms-translations']);
@@ -75,8 +78,8 @@ axios.get('configs/map.json')
         (cfg) => ({
             ...cfg,
             initialActions: [
-                configureMap.bind(null, data, 1, true)
+                configureMap.bind(null, data, 1, true),
+                setControlProperty.bind(null, 'fgJsonCatalog', 'enabled', true)
             ]
         }));
     });
-

@@ -14,13 +14,13 @@ const usePluginItems = ({
     items,
     loadedPlugins,
     loaderComponent
-}) => {
+}, dependencies = []) => {
     function configurePluginItems(props) {
         return [...props.items]
             .sort((a, b) => a.position > b.position ? 1 : -1)
             .map(plg => ({
                 ...plg,
-                Component: getConfiguredPlugin(plg, props.loadedPlugins, props.loaderComponent || <div />)
+                Component: plg.Component || getConfiguredPlugin(plg, props.loadedPlugins, props.loaderComponent || <div />)
             })) || [];
     }
     const props = useRef({});
@@ -30,7 +30,7 @@ const usePluginItems = ({
         loaderComponent
     };
     const loadedPluginsKeys = join(Object.keys(loadedPlugins || {}), ',');
-    const configuredItems = useMemo(() => configurePluginItems(props.current), [loadedPluginsKeys]);
+    const configuredItems = useMemo(() => configurePluginItems(props.current), [loadedPluginsKeys, ...dependencies]);
     return configuredItems;
 };
 
