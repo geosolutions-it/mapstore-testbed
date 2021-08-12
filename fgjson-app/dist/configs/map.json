@@ -1,0 +1,44 @@
+{
+    "version": 2,
+    "map": {
+        "projection": "EPSG:900913",
+        "units": "m",
+        "center": {
+            "x": 0,
+            "y": 0,
+            "crs": "EPSG:4326"
+        },
+        "zoom": 2,
+        "maxExtent": [
+            -20037508.34,
+            -20037508.34,
+            20037508.34,
+            20037508.34
+        ],
+        "layers": [
+            {
+                "format": "image/jpeg",
+                "group": "background",
+                "name": "osm:osm_simple_light",
+                "opacity": 1,
+                "title": "OSM Simple Light",
+                "thumbURL": "static/osm-simple-light.jpeg",
+                "type": "wms",
+                "url": [
+                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps5.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps6.geosolutionsgroup.com/geoserver/wms"
+                ],
+                "source": "osm_simple_light",
+                "visibility": true,
+                "singleTile": false,
+                "credits": {
+                    "title": "OSM Simple Light | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+                }
+            }
+        ]
+    }
+}
