@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 import { addLayer, updateNode } from '@mapstore/framework/actions/layers';
 import { zoomToExtent } from '@mapstore/framework/actions/map';
 import axios from '@mapstore/framework/libs/ajax';
-// import Proj4js from 'proj4';
 import {
     ADD_FGJSON_LAYER_FROM_URL,
     UPDATE_FGJSON_LAYER
@@ -41,7 +40,6 @@ function parseCRSString(crsString) {
 }
 
 function fgJSONToGeoJSON(collection, crs) {
-
     const features = collection.features.map((feature) => ({
         ...feature,
         geometry: feature.where || feature.geometry,
