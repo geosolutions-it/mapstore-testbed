@@ -80,7 +80,7 @@ const tabContent = {
                 <FormGroup
                     controlId="lowerLimit"
                     key="lowerLimit">
-                    <ControlLabel>Lower limit property</ControlLabel>
+                    <ControlLabel>Elevation property</ControlLabel>
                     <Select
                         value={selectedLayer.lowerLimit}
                         options={featureProperties.map((value) => ({ value, label: value }))}
@@ -94,7 +94,7 @@ const tabContent = {
                 <FormGroup
                     controlId="upperLimit"
                     key="upperLimit">
-                    <ControlLabel>Upper limit property</ControlLabel>
+                    <ControlLabel>Height property</ControlLabel>
                     <Select
                         value={selectedLayer.upperLimit}
                         options={featureProperties.map((value) => ({ value, label: value }))}
@@ -119,7 +119,7 @@ const tabContent = {
                 <FormGroup
                     controlId="limit"
                     key="limit">
-                    <ControlLabel>Limit</ControlLabel>
+                    <ControlLabel>Max features count</ControlLabel>
                     <Select
                         value={selectedLayer?.params?.limit}
                         options={[
