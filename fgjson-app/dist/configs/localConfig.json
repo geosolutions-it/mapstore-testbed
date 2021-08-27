@@ -20,7 +20,7 @@
     "projectionDefs": [
         {
             "code": "EPSG:3395",
-            "def": "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs",
+            "def": "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +axis=enu",
             "extent": [
                 -20026376.39,
                 -15496570.74,
@@ -32,6 +32,22 @@
                 -80.0,
                 180.0,
                 84.0
+            ]
+        },
+        {
+            "code": "EPSG:4326_neu",
+            "def": "+proj=longlat +datum=WGS84 +no_defs +axis=neu",
+            "extent": [
+                -180.0,
+                -90.0,
+                180.0,
+                90.0
+            ],
+            "worldExtent": [
+                -180.0,
+                -90.0,
+                180.0,
+                90.0
             ]
         },
         {
@@ -52,7 +68,7 @@
         },
         {
             "code": "CRS84",
-            "def": "+proj=longlat +datum=WGS84 +no_defs",
+            "def": "+proj=longlat +datum=WGS84 +no_defs +axis=enu",
             "extent": [
                 -180.0,
                 -90.0,
