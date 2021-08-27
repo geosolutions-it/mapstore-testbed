@@ -39,10 +39,23 @@ function parseCRSString(crsString) {
     return `${name === 'EPSG' ? 'EPSG:' : ''}${code}`;
 }
 
+function isSupportedWhere(geometry) {
+    return [
+        'Point',
+        'LineString',
+        'Polygon',
+        'MultiPoint',
+        'MultiLineString',
+        'MultiPolygon',
+        'GeometryCollection'
+    ].includes(geometry?.type);
+}
+
 function fgJSONToGeoJSON(collection, crs) {
+
     const features = collection.features.map((feature) => ({
         ...feature,
-        geometry: feature.where || feature.geometry,
+        geometry: feature.where && isSupportedWhere(feature.where) ? feature.where : feature.geometry,
         type: 'Feature'
     }));
 
@@ -52,8 +65,14 @@ function fgJSONToGeoJSON(collection, crs) {
         features
     };
 
-    if (crs !== 'CRS84') {
+    if (crs !== 'CRS84' && crs !== 'EPSG:4326') {
         return reprojectGeoJson(JSON.parse(JSON.stringify(parsedCollection)), crs, 'CRS84');
+    }
+
+    // we need to handle the axis order with a special ref system
+    // EPSG:4326 is used internally similarly to CRS84 (need fix)
+    if (crs === 'EPSG:4326') {
+        return reprojectGeoJson(JSON.parse(JSON.stringify(parsedCollection)), 'EPSG:4326_neu', 'CRS84');
     }
 
     return parsedCollection;
@@ -89,12 +108,32 @@ function getFilteredFeatures(state, features) {
     return features;
 }
 
+function requestFallback(href) {
+    return href ? axios.get(href).then((res) => res.data).catch(() => null) : new Promise(resolve => resolve(href));
+}
+
 const addFGJSONLayerEpic = (action$, store) =>
     action$.ofType(ADD_FGJSON_LAYER_FROM_URL)
         .switchMap((action) => {
+            const collectionUrl = (action?.properties?.links?.find((link) => link.rel === 'self') || {}).href;
             const DEFAULT_LIMIT = 50;
-            return Observable.defer(() => axios.get(action.layerUrl, { params: { limit: DEFAULT_LIMIT }}))
-                .switchMap(({ data, headers }) => {
+            return Observable.defer(() => axios.all([
+                axios.get(action.layerUrl, { params: { limit: DEFAULT_LIMIT }}),
+                axios.get(collectionUrl)
+                    .then(({ data }) => {
+                        const queryablesHref = (data.links?.find((link) => link.rel.indexOf('queryables') !== -1) || {}).href;
+                        const schemaItemHref = (data.links?.find((link) => link.rel.indexOf('schema-item') !== -1) || {}).href;
+                        const schemaCollectionHref = (data.links?.find((link) => link.rel.indexOf('schema-collection') !== -1) || {}).href;
+                        return axios.all([
+                            requestFallback(queryablesHref),
+                            requestFallback(schemaItemHref),
+                            requestFallback(schemaCollectionHref)
+                        ]);
+                    })
+                    .catch(() => null)
+            ]))
+                .switchMap(([{ data, headers }, info]) => {
+                    const [ queryables, schemaItem, schemaCollection ] = info || [];
                     const crs = getFJGSONRefSystem(data) || parseCRSString(headers['content-crs']);
                     if (!isCRSAvailable(crs)) {
                         return Observable.of(
@@ -114,6 +153,9 @@ const addFGJSONLayerEpic = (action$, store) =>
                             visibility: true,
                             isVector: true,
                             collection,
+                            queryables,
+                            schemaItem,
+                            schemaCollection,
                             style: {
                                 fillColor: chroma.random().hex(),
                                 fillOpacity: 0.8,
@@ -132,10 +174,10 @@ const addFGJSONLayerEpic = (action$, store) =>
                                     maxx: bbox[2],
                                     maxy: bbox[3]
                                 },
-                                crs: 'EPSG:4326'
+                                crs: 'CRS84'
                             }
                         }),
-                        zoomToExtent(bbox, 'EPSG:4326'),
+                        zoomToExtent(bbox, 'CRS84'),
                         setControlProperty('toc', 'enabled', true),
                         setControlProperty('viewer', 'loading', false)
                     );
@@ -166,7 +208,15 @@ const updateFGJSONLayerEpic = (action$, store) =>
                             originalFeatures: features,
                             features: getFilteredFeatures(store.getState(), features),
                             collection,
-                            bbox
+                            bbox: {
+                                bounds: {
+                                    minx: bbox[0],
+                                    miny: bbox[1],
+                                    maxx: bbox[2],
+                                    maxy: bbox[3]
+                                },
+                                crs: 'CRS84'
+                            }
                         }),
                         setControlProperty('viewer', 'loading', false)
                     );

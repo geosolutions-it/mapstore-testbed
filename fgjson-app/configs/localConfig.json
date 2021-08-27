@@ -35,7 +35,7 @@
             ]
         },
         {
-            "code": "EPSG:4326",
+            "code": "EPSG:4326_neu",
             "def": "+proj=longlat +datum=WGS84 +no_defs +axis=neu",
             "extent": [
                 -180.0,

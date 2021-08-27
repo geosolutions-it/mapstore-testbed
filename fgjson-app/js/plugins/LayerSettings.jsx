@@ -50,7 +50,9 @@ const tabContent = {
         onChange,
         onUpdate
     }) => {
-        const featureProperties = Object.keys(selectedLayer?.features?.[0]?.properties || {});
+        const queryablesProperties = selectedLayer?.queryables?.properties || {};
+        const featureNumberProperties = Object.keys(queryablesProperties)
+            .map((key) => ({ value: key, label: `${queryablesProperties[key].title || key} (${queryablesProperties[key].type})` }));
         function handleUpdateParam(key, value) {
             const newLayer = {
                 ...selectedLayer,
@@ -83,7 +85,7 @@ const tabContent = {
                     <ControlLabel>Elevation property</ControlLabel>
                     <Select
                         value={selectedLayer.lowerLimit}
-                        options={featureProperties.map((value) => ({ value, label: value }))}
+                        options={featureNumberProperties}
                         onChange={(selected) => {
                             onChange(selectedLayer.id, 'layers',
                                 {
@@ -94,10 +96,10 @@ const tabContent = {
                 <FormGroup
                     controlId="upperLimit"
                     key="upperLimit">
-                    <ControlLabel>Height property</ControlLabel>
+                    <ControlLabel>Upper volume elevation property</ControlLabel>
                     <Select
                         value={selectedLayer.upperLimit}
-                        options={featureProperties.map((value) => ({ value, label: value }))}
+                        options={featureNumberProperties}
                         onChange={(selected) => {
                             onChange(selectedLayer.id, 'layers',
                                 {

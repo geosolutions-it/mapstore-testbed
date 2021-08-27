@@ -6,7 +6,7 @@ Rendering of vector layers based on experimental GeoJSON formats. The applicatio
 - layer tree to select and edit imported layers (left panel)
 - layer setting panel to edit params:
     - elevation property: if specified uses this property as elevation value
-    - height property: if specified uses this property as height value
+    - upper volume elevation property: if specified uses this property as upper value
     - available crs: select a different crs to apply to the features collection
     - max features count: maximum number of feature to request
     - style: a dedicated panel to edit the features style (only polygon supported)
