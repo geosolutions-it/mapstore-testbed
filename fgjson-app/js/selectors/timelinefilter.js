@@ -32,7 +32,14 @@ export const getLayerTimeItems = (state) => {
         ];
     }, []);
     const ranges = fgJsonLayers.map(({ collection, title, id }) => {
-        const when = collection?.features?.reduce((acc, feature) => feature?.when?.interval ? [...acc, ...feature.when.interval.map(date => moment(date))] : [], []) || [];
+        const when = collection?.features?.reduce((acc, feature) => feature?.when?.interval
+            ? [...acc, ...feature.when.interval.map(date => moment(date))]
+            : feature?.when?.interval
+                ? feature?.when?.instant
+                    ? [...acc, moment(feature.when.instant)]
+                    : acc
+                : acc, []
+        ) || [];
         if (when.length === 0) {
             return null;
         }
@@ -59,7 +66,7 @@ export const getTimelineRange = (state) => {
         return currentRange;
     }
     const timelineItems = getLayerTimeItems(state);
-    const allIntervals = (timelineItems.ranges || []).reduce((acc, item) => [...acc, item.start, item.end], []);
+    const allIntervals = (timelineItems.ranges || []).reduce((acc, item) => [...acc, item.start, item.end], []).filter(val => val !== undefined);
     if (allIntervals.length === 0) {
         return null;
     }
