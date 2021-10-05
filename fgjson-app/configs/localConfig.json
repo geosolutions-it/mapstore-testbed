@@ -81,6 +81,22 @@
                 180.0,
                 90.0
             ]
+        },
+        {
+            "code": "EPSG:25830",
+            "def": "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +axis=enu",
+            "extent": [
+                -729785.76,
+                3715125.82,
+                945351.10,
+                9522561.39
+            ],
+            "worldExtent": [
+                -16.1,
+                32.88,
+                40.18,
+                84.17
+            ]
         }
     ],
     "plugins": {

@@ -80,7 +80,27 @@ function fgJSONToGeoJSON(collection, crs) {
 
 function parseCollection(collection, headerCRS) {
     const crs = headerCRS || 'CRS84';
-    const reprojectedCollection = fgJSONToGeoJSON(collection, crs);
+
+    let reprojectedCollection;
+    if (collection?.features?.find((feature) => feature['coord-ref-sys'])) {
+        reprojectedCollection = {
+            ...collection,
+            features: collection?.features?.map((feature) => {
+                const featureCrs = parseCRSString(feature['coord-ref-sys']) || crs;
+                if (!isCRSAvailable(featureCrs)) {
+                    return null;
+                }
+                try {
+                    const tmpCollection = fgJSONToGeoJSON({ type: 'FeatureCollection', features: [ feature ] }, featureCrs);
+                    return tmpCollection.features[0];
+                } catch (e) {
+                    return null;
+                }
+            }).filter(feature => feature)
+        };
+    } else {
+        reprojectedCollection = fgJSONToGeoJSON(collection, crs);
+    }
     const bbox = turfBbox(reprojectedCollection);
     return {
         bbox,
@@ -102,7 +122,21 @@ function getFilteredFeatures(state, features) {
         const range = moment().range(timelineRange.start, timelineRange.end);
         return features.filter(({ when }) => {
             const interval = when?.interval;
-            return !interval || (range.contains(moment(interval[0])) && range.contains(moment(interval[1])));
+
+            if (interval) {
+                const iRange = moment().range(interval[0], interval[1]);
+                return (
+                    range.contains(moment(interval[0]))
+                    || range.contains(moment(interval[1]))
+                    || iRange.contains(moment(timelineRange.start))
+                    || iRange.contains(moment(timelineRange.end))
+                );
+            }
+            const instant = when?.instant;
+            if (instant) {
+                return range.contains(moment(instant));
+            }
+            return true;
         });
     }
     return features;
