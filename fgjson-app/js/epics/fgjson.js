@@ -20,6 +20,7 @@ import chroma from 'chroma-js';
 import { getAvailableCRS, reprojectGeoJson } from '@mapstore/framework/utils/CoordinatesUtils';
 import { setControlProperty, SET_CONTROL_PROPERTY } from '@mapstore/framework/actions/controls';
 import { getTimelineRange } from '@js/selectors/timelinefilter';
+import url from 'url';
 import moment from 'moment';
 import * as momentRange from 'moment-range';
 import { layersSelector } from '@mapstore/framework/selectors/layers';
@@ -142,6 +143,14 @@ function getFilteredFeatures(state, features) {
     return features;
 }
 
+function isRelativePath(pathUrl) {
+    if (!pathUrl) {
+        return false;
+    }
+    const { protocol } = url.parse(pathUrl) || {};
+    return !protocol;
+}
+
 function requestFallback(href) {
     return href ? axios.get(href).then((res) => res.data).catch(() => null) : new Promise(resolve => resolve(href));
 }
@@ -149,19 +158,20 @@ function requestFallback(href) {
 const addFGJSONLayerEpic = (action$, store) =>
     action$.ofType(ADD_FGJSON_LAYER_FROM_URL)
         .switchMap((action) => {
+            const baseUrl = action?.properties?.baseUrl || '';
             const collectionUrl = (action?.properties?.links?.find((link) => link.rel === 'self') || {}).href;
             const DEFAULT_LIMIT = 50;
             return Observable.defer(() => axios.all([
                 axios.get(action.layerUrl, { params: { limit: DEFAULT_LIMIT }}),
-                axios.get(collectionUrl)
+                axios.get(isRelativePath(collectionUrl) ? `${baseUrl}${collectionUrl}` : collectionUrl)
                     .then(({ data }) => {
                         const queryablesHref = (data.links?.find((link) => link.rel.indexOf('queryables') !== -1) || {}).href;
                         const schemaItemHref = (data.links?.find((link) => link.rel.indexOf('schema-item') !== -1) || {}).href;
                         const schemaCollectionHref = (data.links?.find((link) => link.rel.indexOf('schema-collection') !== -1) || {}).href;
                         return axios.all([
-                            requestFallback(queryablesHref),
-                            requestFallback(schemaItemHref),
-                            requestFallback(schemaCollectionHref)
+                            requestFallback(isRelativePath(queryablesHref) ? `${baseUrl}${queryablesHref}` : queryablesHref),
+                            requestFallback(isRelativePath(schemaItemHref) ? `${baseUrl}${schemaItemHref}` : schemaItemHref),
+                            requestFallback(isRelativePath(schemaCollectionHref) ? `${baseUrl}${schemaCollectionHref}` : schemaCollectionHref)
                         ]);
                     })
                     .catch(() => null)

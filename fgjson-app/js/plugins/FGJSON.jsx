@@ -19,6 +19,7 @@ import axios from '@mapstore/framework/libs/ajax';
 import Loader from '@mapstore/framework/components/misc/Loader';
 import tooltip from '@mapstore/framework/components/misc/enhancers/tooltip';
 import Select from 'react-select';
+import url from 'url';
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 
 const InputGroupAddon = tooltip(InputGroup.Addon);
@@ -104,9 +105,9 @@ function Response({
                             key={idx}
                             className="shadow-soft"
                             style={{ padding: 8, margin: 8, paddingLeft: 0, display: 'flex', cursor: 'pointer' }}
-                            onClick={onConnect.bind(null, link.href)}
+                            onClick={onConnect.bind(null, link.href, false)}
                         >
-                            <Button onClick={onConnect.bind(null, link.href)} className="square-button no-border" style={{ margin: 8 }} >
+                            <Button onClick={onConnect.bind(null, link.href, false)} className="square-button no-border" style={{ margin: 8 }} >
                                 <Glyphicon glyph="link"/>
                             </Button>
                             <div style={{ flex: 1 }}>
@@ -148,17 +149,30 @@ function FGJSONPlugin({
 }) {
     const [ogcUrl, setOgcUrl] = useState('');
     const [json, setJSON] = useState({});
+    const [baseUrl, setBaseUrl] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [activeTab, setActiveTab] = useState('response');
     const [options] = useState(defaultOptions.map(({ value }) => ({ value, label: value })));
 
-    function handleConnectToOGCApi(endpointUrl, event) {
+    function isRelativePath(pathUrl) {
+        const { protocol } = url.parse(pathUrl) || {};
+        return !protocol;
+    }
+
+    function handleConnectToOGCApi(endpointUrl, init, event) {
         event.stopPropagation();
+        if (init === true) {
+            setBaseUrl('');
+        }
         setError('');
         setLoading(true);
-        getEndpointData(endpointUrl)
+        getEndpointData(isRelativePath(endpointUrl) ? `${baseUrl}${endpointUrl}` : endpointUrl)
             .then((response) => {
+                if (init === true) {
+                    const { protocol, host } = url.parse(endpointUrl);
+                    setBaseUrl(`${protocol}//${host}`);
+                }
                 setJSON(response);
                 setLoading(false);
             })
@@ -177,7 +191,7 @@ function FGJSONPlugin({
             }
             return [...acc, value];
         }, []);
-        onAddGeoJSON(geoJsonUrl, { ...properties, crs });
+        onAddGeoJSON(isRelativePath(geoJsonUrl) ? `${baseUrl}${geoJsonUrl}` : geoJsonUrl, { ...properties, crs, baseUrl });
     }
 
     const isNotConnected = isEmpty(json);
@@ -229,7 +243,7 @@ function FGJSONPlugin({
                             tooltip={isNotConnected ? 'Connect' : ''}
                             disabled={!ogcUrl}
                             className={`btn ${!isNotConnected ? 'btn-success active' : ''}`}
-                            onClick={!ogcUrl ? () => null : handleConnectToOGCApi.bind(null, ogcUrl)}
+                            onClick={!ogcUrl ? () => null : handleConnectToOGCApi.bind(null, ogcUrl, true)}
                         >
                             <Glyphicon glyph={isNotConnected ? 'unplug' : 'plug'} />
                         </InputGroupAddon>
@@ -271,7 +285,7 @@ function FGJSONPlugin({
                                 data?.type === 'application/json'
                                 || !data?.type
                             )) {
-                                return <span>{itemType} {itemString} <Button bsStyle="primary" bsSize="xs" onClick={handleConnectToOGCApi.bind(null, data.href)}>Explore data</Button></span>;
+                                return <span>{itemType} {itemString} <Button bsStyle="primary" bsSize="xs" onClick={handleConnectToOGCApi.bind(null, data.href, false)}>Explore data</Button></span>;
                             }
                             const linksWithFGeoJSON = data?.links?.find((link) => link.rel === 'items' && link.type === 'application/vnd.ogc.fg+json');
                             const linksWithGeoJSON = data?.links?.find((link) => link.rel === 'items' && (link.type === 'application/geo+json' || !link.type));
