@@ -160,7 +160,7 @@ const addFGJSONLayerEpic = (action$, store) =>
         .switchMap((action) => {
             const baseUrl = action?.properties?.baseUrl || '';
             const collectionUrl = (action?.properties?.links?.find((link) => link.rel === 'self') || {}).href;
-            const DEFAULT_LIMIT = 50;
+            const DEFAULT_LIMIT = 200;
             return Observable.defer(() => axios.all([
                 axios.get(action.layerUrl, { params: { limit: DEFAULT_LIMIT }}),
                 axios.get(isRelativePath(collectionUrl) ? `${baseUrl}${collectionUrl}` : collectionUrl)

@@ -44,6 +44,15 @@ const theme = {
     base0F: '#be643c'
 };
 
+function parseCRSString(crsString) {
+    if (!crsString) return '';
+    const cleanString = crsString.replace(/\<|\>/g, '').split('/');
+    const code = cleanString[cleanString.length - 1];
+    // const version = cleanString[cleanString.length - 2];
+    const name = cleanString[cleanString.length - 3];
+    return `${name === 'EPSG' ? 'EPSG:' : ''}${code}`;
+}
+
 const tabContent = {
     settings: ({
         selectedLayer,
@@ -113,7 +122,7 @@ const tabContent = {
                     <ControlLabel>Available CRS</ControlLabel>
                     <Select
                         value={selectedLayer?.params?.crs}
-                        options={selectedLayer?.availableCrs?.map((value) => ({ value, label: value }))}
+                        options={selectedLayer?.availableCrs?.map((value) => ({ value, label: parseCRSString(value) }))}
                         onChange={(selected) => {
                             handleUpdateParam('crs', selected?.value);
                         }} />
@@ -138,8 +147,24 @@ const tabContent = {
                                 label: '100'
                             },
                             {
+                                value: 200,
+                                label: '200'
+                            },
+                            {
                                 value: 500,
                                 label: '500'
+                            },
+                            {
+                                value: 1000,
+                                label: '1000'
+                            },
+                            {
+                                value: 2500,
+                                label: '2500'
+                            },
+                            {
+                                value: 5000,
+                                label: '5000'
                             }
                         ]}
                         onChange={(selected) => {
