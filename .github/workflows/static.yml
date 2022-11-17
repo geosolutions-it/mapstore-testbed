@@ -50,10 +50,7 @@ jobs:
             ${{ runner.os }}-
       - name: Build
         run: |
-          cd ./building-energy
-          npm install
-          npm run compile
-          cd ..
+          ./build.sh
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
