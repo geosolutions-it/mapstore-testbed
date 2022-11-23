@@ -2,8 +2,8 @@
   "version": 2,
   "map": {
     "center": {
-      "x": -73.55486559023645,
-      "y": 45.46307102921777,
+      "x": -73.54595806858126,
+      "y": 45.45955468979168,
       "crs": "EPSG:4326"
     },
     "maxExtent": [
@@ -14,7 +14,8 @@
     ],
     "projection": "EPSG:900913",
     "units": "m",
-    "zoom": 15,
+    "zoom": 15.000387820492339,
+    "mapOptions": {},
     "layers": [
       {
         "format": "image/jpeg",

@@ -11,6 +11,7 @@ import '@mapstore/framework/libs/bindings/rxjsRecompose';
 
 import url from 'url';
 import main from '@mapstore/framework/product/main';
+import { connect } from 'react-redux';
 import pluginsDef from '@js/plugins/def';
 import {
     setLocalConfigurationFile,
@@ -22,6 +23,8 @@ import { configureMap } from '@mapstore/framework/actions/config';
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import security from '@mapstore/framework/reducers/security';
 import omit from 'lodash/omit';
+
+import energyEpics from '@js/epics/energy';
 
 setLocalConfigurationFile('configs/localConfig.json');
 setConfigProp('translationsPath', ['translations', 'ms-translations']);
@@ -53,13 +56,21 @@ axios.interceptors.request.use(
     }
 );
 
+const MAP_TYPE = 'cesium';
+
 const pages = [{
     name: 'home',
     path: '/',
-    component: MapViewer
+    component: connect(() => ({}), {}, (stateProps, dispatchProps, ownProps) => ({
+        ...ownProps,
+        ...stateProps,
+        ...dispatchProps,
+        params: {
+            ...ownProps?.params,
+            mapType: MAP_TYPE
+        }
+    }))(MapViewer)
 }];
-
-const MAP_TYPE = 'cesium';
 
 document.addEventListener('DOMContentLoaded', function() {
     // example of initial security state
@@ -97,7 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     appReducers: {
                         security
                     },
-                    appEpics: {},
+                    appEpics: {
+                        ...energyEpics
+                    },
                     printingEnabled: false
                 },
                 pluginsDef,

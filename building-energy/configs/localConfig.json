@@ -8,6 +8,34 @@
     ],
     "projectionDefs": [],
     "authenticationRules": [],
+    "initialState": {
+        "defaultState": {
+            "locales": {
+                "supportedLocales": {
+                    "it": {
+                        "code": "it-IT",
+                        "description": "Italiano"
+                    },
+                    "en": {
+                        "code": "en-US",
+                        "description": "English"
+                    },
+                    "fr": {
+                        "code": "fr-FR",
+                        "description": "Français"
+                    },
+                    "de": {
+                        "code": "de-DE",
+                        "description": "Deutsch"
+                    },
+                    "es": {
+                        "code": "es-ES",
+                        "description": "Español"
+                    }
+                }
+            }
+        }
+    },
     "plugins": [
         {
             "name": "Map",
@@ -56,6 +84,7 @@
         {
             "name": "Share",
             "cfg": {
+                "showAPI": false,
                 "advancedSettings": {
                     "bbox": true,
                     "centerAndZoom": true
@@ -214,14 +243,6 @@
             }
         },
         {
-            "name": "ZoomAll",
-            "override": {
-                "Toolbar": {
-                    "alwaysVisible": true
-                }
-            }
-        },
-        {
             "name": "Cookie",
             "cfg": {
                 "externalCookieUrl": "",
@@ -230,9 +251,6 @@
         },
         {
             "name": "OmniBar"
-        },
-        {
-            "name": "FullScreen"
         },
         {
             "name": "SearchServicesConfig"
@@ -259,7 +277,7 @@
             "name": "SidebarMenu"
         },
         {
-            "name": "MapViews"
+            "name": "ClassificationVectorLayer"
         }
     ]
 }

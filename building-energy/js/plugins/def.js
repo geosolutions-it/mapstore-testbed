@@ -46,8 +46,12 @@ import WidgetsBuilderPlugin from '@mapstore/framework/plugins/WidgetsBuilder';
 import WidgetsTrayPlugin from '@mapstore/framework/plugins/WidgetsTray';
 import ZoomAllPlugin from '@mapstore/framework/plugins/ZoomAll';
 
+import ClassificationVectorLayerPlugin from '@js/plugins/ClassificationVectorLayer';
+
 export default {
     plugins: {
+        // custom plugins
+        ClassificationVectorLayerPlugin,
         // framework plugins
         AboutPlugin,
         AddGroupPlugin,
