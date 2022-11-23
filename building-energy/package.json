@@ -43,7 +43,7 @@
     "@mapstore/project": "1.0.24"
   },
   "dependencies": {
-    "mapstore": "npm install https://github.com/allyoucanmap/MapStore2.git#tb18",
+    "mapstore": "git+https://github.com/allyoucanmap/MapStore2.git#tb18",
     "simple-statistics": "7.8.0"
   },
   "mapstore": {
