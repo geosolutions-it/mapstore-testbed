@@ -8,6 +8,7 @@
 
 import { Observable } from 'rxjs';
 import { MAP_CONFIG_LOADED } from '@mapstore/framework/actions/config';
+import { setControlProperty } from '@mapstore/framework/actions/controls';
 import url from 'url';
 import axios from '@mapstore/framework/libs/ajax';
 import { getCapabilities } from '@mapstore/framework/api/ThreeDTiles';
@@ -117,9 +118,12 @@ export const energyInitEnergyMap = (action$) =>
                             type: 'vector',
                             features: features.filter((feature, idx) => !filteredIndexes.includes(idx)),
                             visibility: true
-                        })
+                        }),
+                        setControlProperty('classificationVectorLayer', 'loading', false)
                     );
-                });
+                })
+                .catch(() => Observable.of(setControlProperty('classificationVectorLayer', 'loading', false)))
+                .startWith(setControlProperty('classificationVectorLayer', 'loading', true));
         });
 
 

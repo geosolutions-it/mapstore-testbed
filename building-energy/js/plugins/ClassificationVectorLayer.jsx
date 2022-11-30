@@ -20,6 +20,7 @@ import SLDService from '@mapstore/framework/api/SLDService';
 import ColorRamp from '@mapstore/framework/components/styleeditor/ColorRamp';
 import chroma from 'chroma-js';
 import StyleBasedLegend from '@mapstore/framework/components/TOC/fragments/StyleBasedLegend';
+import Loader from '@mapstore/framework/components/misc/Loader';
 import moment from 'moment';
 const { getColors } = SLDService;
 
@@ -142,8 +143,31 @@ function ClassificationVectorLayer({
     layer,
     onChange,
     defaultColorRamp = 'viridis',
-    classes = 7
+    classes = 7,
+    loading
 }) {
+
+    if (loading) {
+        return (
+            <div
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: 'rgba(255, 255, 255, 0.6)',
+                    zIndex: 5000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+            >
+                <Loader size={100}/>
+            </div>
+        );
+    }
+
     if (!layer) {
         return null;
     }
@@ -250,6 +274,7 @@ function ClassificationVectorLayer({
         }
         return;
     }
+
     return (
         <div
             style={{ position: 'absolute', top: 100, right: 46, background: '#ffffff', zIndex: 10, width: 300, padding: 8 }}
@@ -316,8 +341,12 @@ function ClassificationVectorLayer({
 }
 
 const ConnectedClassificationVectorLayer = connect(
-    createSelector([layersSelector], (layers) => ({
-        layer: layers?.find(layer => layer.id === ENERGY_LAYER_ID)
+    createSelector([
+        layersSelector,
+        state => state?.controls?.classificationVectorLayer?.loading
+    ], (layers, loading) => ({
+        layer: layers?.find(layer => layer.id === ENERGY_LAYER_ID),
+        loading
     })),
     {
         onChange: updateNode.bind(null, ENERGY_LAYER_ID, 'layers')

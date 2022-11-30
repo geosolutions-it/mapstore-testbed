@@ -7,6 +7,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
+import ReactSwipe from 'react-swipeable-views';
+import SwipeHeader from '@mapstore/framework/components/data/identify/SwipeHeader';
+
 import AboutPlugin from '@mapstore/framework/product/plugins/About';
 import AddGroupPlugin from '@mapstore/framework/plugins/AddGroup';
 import AnnotationsPlugin from '@mapstore/framework/plugins/Annotations';
@@ -92,5 +95,8 @@ export default {
         WidgetsTrayPlugin,
         ZoomAllPlugin
     },
-    requires: {}
+    requires: {
+        ReactSwipe,
+        SwipeHeader
+    }
 };
