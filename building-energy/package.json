@@ -40,10 +40,13 @@
     "mapstore:latest": "npm install https://github.com/geosolutions-it/MapStore2.git#master"
   },
   "devDependencies": {
-    "@mapstore/project": "1.0.24"
+    "@mapstore/project": "1.0.25"
   },
   "dependencies": {
+    "@mapbox/vector-tile": "1.3.1",
+    "geojson-vt": "3.2.1",
     "mapstore": "git+https://github.com/allyoucanmap/MapStore2.git#tb18",
+    "pbf": "3.2.1",
     "simple-statistics": "7.8.0"
   },
   "mapstore": {

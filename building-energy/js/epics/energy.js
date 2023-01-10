@@ -47,7 +47,19 @@ export const energyInitEnergyMap = (action$) =>
     action$.ofType(MAP_CONFIG_LOADED)
         .switchMap(() => {
             const params = url.parse(window.location.href, true).query || {};
-            const { collection, bbox } = params;
+            const { collection, bbox, mvt } = params;
+            if (mvt) {
+                return Observable.of(
+                    addLayer({
+                        id: uuid(),
+                        type: 'vector-tile',
+                        title: 'vector-tile',
+                        visibility: true,
+                        url: mvt,
+                        provider: 'mvt'
+                    })
+                );
+            }
             if (!collection) {
                 return Observable.empty();
             }
